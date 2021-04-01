@@ -15,5 +15,6 @@ Unofficial implementation of [ViViT: A Video Vision Transformer](https://arxiv.o
 
 ## Acknowledgement:
 * Base ViT code is borrowed from [@lucidrains](https://github.com/lucidrains) repo : https://github.com/lucidrains/vit-pytorch
+* Some logic for Model 2 ViViT is from : https://github.com/lucidrains/STAM-pytorch 
 
 
