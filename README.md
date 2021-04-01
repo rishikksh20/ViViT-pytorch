@@ -7,7 +7,7 @@ Unofficial implementation of [ViViT: A Video Vision Transformer](https://arxiv.o
 * Model 2 is implemented, Model 3 and Model 4 isn't.
 
 ## Usage:
-```
+```python
 img = torch.ones([1, 16, 3, 224, 224])
 
 model = ViViT(224, 16, 100, 16)
