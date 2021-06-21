@@ -1,11 +1,10 @@
 import torch
-from torch import nn, einsum
-import torch.nn.functional as F
+from torch import nn
 from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from module import Attention, PreNorm, FeedForward
 import numpy as np
-from load_data import DatasetProcessing
+from utils import *
 from torch.utils.data import DataLoader
 import time
 
@@ -120,13 +119,13 @@ if __name__ == "__main__":
 
     train_loss_history, test_loss_history = [], []
     N_EPOCHS = 4
-
+    loss_func = nn.CrossEntropyLoss()
     start_time = time.time()
 
     for epoch in range(1, N_EPOCHS + 1):
         print('Epoch:', epoch)
-        model.train_epoch(model, optimizer, train_loader, train_loss_history)
-        model.evaluate(model, val_loader, test_loss_history)
+        train_epoch(model, optimizer, train_loader, train_loss_history, loss_func)
+        model.evaluate(model, val_loader, test_loss_history, loss_func)
 
     print('Execution time:', '{:5.2f}'.format(time.time() - start_time), 'seconds')
     
