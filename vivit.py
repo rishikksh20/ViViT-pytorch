@@ -5,6 +5,9 @@ from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
 from module import Attention, PreNorm, FeedForward
 import numpy as np
+from load_data import DatasetProcessing
+from torch.utils.data import DataLoader
+import time
 
 class Transformer(nn.Module):
     def __init__(self, dim, depth, heads, dim_head, mlp_dim, dropout = 0.):
@@ -95,5 +98,35 @@ if __name__ == "__main__":
     
     print("Shape of out :", out.shape)      # [B, num_classes]
 
-    
+    batch_size = 8
+    train_videos_path = '<PATH_TO_TRAIN_RAW_VIDEOS>'
+    val_videos_path = '<PATH_TO_VAL_RAW_VIDEOS>'
+    train_videos_frames_path = '<PATH_TO_TRAIN_VIDEOS_FEATURES_PKL>'
+    val_videos_frames_path = '<PATH_TO_VAL_VIDEOS_FEATURES_PKL>'
+
+    dset_val = DatasetProcessing(val_videos_path, val_videos_frames_path)
+    dset_train = DatasetProcessing(train_videos_path, train_videos_frames_path)
+
+    train_loader = DataLoader(dset_train,
+                              batch_size=batch_size,
+                              shuffle=True,
+                              num_workers=0)
+    val_loader = DataLoader(dset_val,
+                             batch_size=batch_size,
+                             shuffle=False,
+                             num_workers=0)
+
+    optimizer = torch.optim.SGD(model.parameters(), lr=0.0001, weight_decay=1e-9, momentum=0.9)
+
+    train_loss_history, test_loss_history = [], []
+    N_EPOCHS = 4
+
+    start_time = time.time()
+
+    for epoch in range(1, N_EPOCHS + 1):
+        print('Epoch:', epoch)
+        model.train_epoch(model, optimizer, train_loader, train_loss_history)
+        model.evaluate(model, val_loader, test_loss_history)
+
+    print('Execution time:', '{:5.2f}'.format(time.time() - start_time), 'seconds')
     
